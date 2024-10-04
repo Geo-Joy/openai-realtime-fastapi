@@ -4,6 +4,8 @@ This project facilitates real-time communication between FastAPI WebSocket conne
 
 ![service flow](readme_assets/fastapi-relay-server-flow.svg)
 
+![postman connect](readme_assets/postman-connection.png)
+
 ## Table of Contents
 
 - [Overview](#overview)
