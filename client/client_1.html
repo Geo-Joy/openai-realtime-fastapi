@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+    <button id="connectButton">Connect to WebSocket</button>
+    <br><br>
+    <textarea id="messageInput" placeholder="Enter your message here..." rows="4" cols="50"></textarea>
+    <br>
+    <button id="sendButton" disabled>Send Message</button>
+    <h2>Messages:</h2>
+    <pre id="messages"></pre>
+
+    <script>
+        let websocket;
+        const connectButton = document.getElementById('connectButton');
+        const sendButton = document.getElementById('sendButton');
+        const messageInput = document.getElementById('messageInput');
+        const messagesDisplay = document.getElementById('messages');
+
+        connectButton.addEventListener('click', () => {
+            websocket = new WebSocket('ws://localhost:8000/realtime');
+
+            websocket.onopen = () => {
+                messagesDisplay.textContent += 'Connected to WebSocket server.\n';
+                sendButton.disabled = false;
+            };
+
+            websocket.onmessage = (event) => {
+                messagesDisplay.textContent += 'Received: ' + event.data + '\n';
+            };
+
+            websocket.onclose = () => {
+                messagesDisplay.textContent += 'WebSocket connection closed.\n';
+                sendButton.disabled = true;
+            };
+
+            websocket.onerror = (error) => {
+                messagesDisplay.textContent += 'WebSocket error: ' + error.message + '\n';
+            };
+        });
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message !== '') {
+                websocket.send(message);
+                messagesDisplay.textContent += 'Sent: ' + message + '\n';
+                messageInput.value = '';
+            } else {
+                alert('Please enter a message to send.');
+            }
+        });
+    </script>
+</body>
+</html>
